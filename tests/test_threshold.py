@@ -48,8 +48,11 @@ def test_threshold_multiblock(tmp_path):
     data = np.linspace(0, 1, 200, dtype=np.float32).reshape(20, 10)
     in_path = tmp_path / "data.zarr" / "raw"
     prepare_ds(
-        in_path, shape=data.shape,
-        voxel_size=Coordinate(1, 1), dtype=data.dtype, mode="w",
+        in_path,
+        shape=data.shape,
+        voxel_size=Coordinate(1, 1),
+        dtype=data.dtype,
+        mode="w",
     )[:] = data
 
     mask_path = tmp_path / "data.zarr" / "mask"

@@ -5,8 +5,13 @@ from volara.blockwise import ApplyShift, ComputeShift
 
 def test_compute_shift_api_conformance():
     required = [
-        "task_name", "write_roi", "write_size", "context_size",
-        "drop_artifacts", "init", "process_block_func",
+        "task_name",
+        "write_roi",
+        "write_size",
+        "context_size",
+        "drop_artifacts",
+        "init",
+        "process_block_func",
     ]
     for attr in required:
         assert hasattr(ComputeShift, attr), f"Missing {attr}"
@@ -14,8 +19,12 @@ def test_compute_shift_api_conformance():
 
 def test_apply_shift_api_conformance():
     required = [
-        "task_name", "write_roi", "write_size", "context_size",
-        "drop_artifacts", "process_block_func",
+        "task_name",
+        "write_roi",
+        "write_size",
+        "context_size",
+        "drop_artifacts",
+        "process_block_func",
     ]
     for attr in required:
         assert hasattr(ApplyShift, attr), f"Missing {attr}"
@@ -24,7 +33,6 @@ def test_apply_shift_api_conformance():
 def test_compute_shift_zero_shift():
     """Identical images produce ~0 shift for channel 0 (both channels use same target)."""
     # Create a structured 3D image (C=2, Z=9, Y=9, X=9) - divisible by 3 as required
-    rng = np.random.default_rng(42)
     # Use a more structured image so cross-correlation works well
     base = np.zeros((9, 9, 9), dtype=np.float32)
     base[2:7, 2:7, 2:7] = 1.0  # clear feature in center

@@ -14,8 +14,11 @@ def test_aff_agglom_drop_edges(frags_2d, sqlite_db_2d, block_2d, tmp_path):
     affs_data = np.zeros((1, 10, 10), dtype=np.float32)
     affs_path = tmp_path / "test.zarr" / "affs"
     arr = prepare_ds(
-        affs_path, shape=affs_data.shape,
-        voxel_size=Coordinate(1, 1), dtype=affs_data.dtype, mode="w",
+        affs_path,
+        shape=affs_data.shape,
+        voxel_size=Coordinate(1, 1),
+        dtype=affs_data.dtype,
+        mode="w",
     )
     arr[:] = affs_data
     arr._source_data.attrs["neighborhood"] = [[1, 0]]
@@ -65,8 +68,11 @@ def test_aff_agglom_basic(frags_2d, sqlite_db_2d, block_2d, tmp_path):
     affs_data[0, ::2, :] = 1
     affs_path = tmp_path / "test.zarr" / "affs"
     arr = prepare_ds(
-        affs_path, shape=affs_data.shape,
-        voxel_size=Coordinate(1, 1), dtype=affs_data.dtype, mode="w",
+        affs_path,
+        shape=affs_data.shape,
+        voxel_size=Coordinate(1, 1),
+        dtype=affs_data.dtype,
+        mode="w",
     )
     arr[:] = affs_data
     arr._source_data.attrs["neighborhood"] = [[1, 0]]

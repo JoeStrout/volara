@@ -17,9 +17,11 @@ def _make_probs(tmp_path, shape, values_per_channel=None):
         data = np.arange(1, int(np.prod(shape)) + 1, dtype=np.float32).reshape(shape)
     path = tmp_path / "data.zarr" / "probs"
     prepare_ds(
-        path, shape=data.shape,
+        path,
+        shape=data.shape,
         voxel_size=Coordinate(*(1,) * (len(shape) - 1)),
-        dtype=data.dtype, mode="w",
+        dtype=data.dtype,
+        mode="w",
     )[:] = data
     return path, data
 
@@ -45,8 +47,11 @@ def test_argmax_basic(tmp_path, block_2d):
     # Values 1..100 in ch0, 101..200 in ch1 -> ch1 always wins
     sem_path = tmp_path / "data.zarr" / "labels"
     prepare_ds(
-        sem_path, shape=(10, 10),
-        voxel_size=Coordinate(1, 1), dtype=np.uint32, mode="w",
+        sem_path,
+        shape=(10, 10),
+        voxel_size=Coordinate(1, 1),
+        dtype=np.uint32,
+        mode="w",
     )
 
     task = Argmax(
@@ -64,11 +69,16 @@ def test_argmax_basic(tmp_path, block_2d):
 def test_argmax_combine_classes(tmp_path, block_2d):
     """combine_classes sums channels before argmax."""
     # ch0=1, ch1=2, ch2=4 -> group[0,1]=3, group[2]=4 -> argmax=1
-    probs_path, _ = _make_probs(tmp_path, (3, 10, 10), values_per_channel=[1.0, 2.0, 4.0])
+    probs_path, _ = _make_probs(
+        tmp_path, (3, 10, 10), values_per_channel=[1.0, 2.0, 4.0]
+    )
     sem_path = tmp_path / "data.zarr" / "labels"
     prepare_ds(
-        sem_path, shape=(10, 10),
-        voxel_size=Coordinate(1, 1), dtype=np.uint8, mode="w",
+        sem_path,
+        shape=(10, 10),
+        voxel_size=Coordinate(1, 1),
+        dtype=np.uint8,
+        mode="w",
     )
 
     task = Argmax(
@@ -90,8 +100,11 @@ def test_argmax_multiblock(tmp_path):
     probs_path, _ = _make_probs(tmp_path, (2, 20, 10), values_per_channel=[1.0, 2.0])
     sem_path = tmp_path / "data.zarr" / "labels"
     prepare_ds(
-        sem_path, shape=(20, 10),
-        voxel_size=Coordinate(1, 1), dtype=np.uint8, mode="w",
+        sem_path,
+        shape=(20, 10),
+        voxel_size=Coordinate(1, 1),
+        dtype=np.uint8,
+        mode="w",
     )
 
     task = Argmax(

@@ -1,4 +1,3 @@
-import numpy as np
 from funlib.geometry import Coordinate
 
 from volara.blockwise import DistanceAgglom

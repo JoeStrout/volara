@@ -1,5 +1,4 @@
 import numpy as np
-import pytest
 
 from volara.lut import LUT, LUTS
 

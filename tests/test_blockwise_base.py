@@ -1,13 +1,10 @@
 from contextlib import contextmanager
 from typing import Literal
 
-import numpy as np
-import pytest
 from funlib.geometry import Coordinate, Roi
 
 from volara.blockwise.blockwise import BlockwiseTask
 from volara.blockwise.pipeline import Pipeline
-from volara.datasets import Labels, Raw
 
 
 class DummyTask(BlockwiseTask):
@@ -117,6 +114,7 @@ def test_serialization_roundtrip():
 def test_check_block_func(tmp_path):
     """mark_block_done then check_block should detect the block as done."""
     import daisy
+
     from volara.logging import set_log_basedir
 
     set_log_basedir(tmp_path / "logs")

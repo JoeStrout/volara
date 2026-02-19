@@ -12,8 +12,11 @@ def _make_clahe_task(tmp_path):
     data = np.linspace(0, 255, 400, dtype=np.uint8).reshape(20, 20)
     in_path = tmp_path / "data.zarr" / "raw"
     prepare_ds(
-        in_path, shape=data.shape,
-        voxel_size=Coordinate(1, 1), dtype=data.dtype, mode="w",
+        in_path,
+        shape=data.shape,
+        voxel_size=Coordinate(1, 1),
+        dtype=data.dtype,
+        mode="w",
     )[:] = data
 
     out_path = tmp_path / "data.zarr" / "clahe"

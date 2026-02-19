@@ -715,8 +715,9 @@ class GraphMWSExtractFragments(BlockwiseTask):
 
                 out_g = nx.subgraph_view(
                     out_graph,
-                    filter_node=lambda node: out_graph.nodes[node].get("position")
-                    is not None,
+                    filter_node=lambda node: (
+                        out_graph.nodes[node].get("position") is not None
+                    ),
                 )
                 out_rag_provider.write_nodes(out_g.nodes, block.write_roi)
                 out_rag_provider.write_edges(out_graph.nodes, out_graph.edges)

@@ -1,6 +1,5 @@
 import numpy as np
 from funlib.geometry import Coordinate
-from funlib.persistence.arrays import prepare_ds
 
 from volara.blockwise import ExtractFrags
 from volara.datasets import Affs, Labels

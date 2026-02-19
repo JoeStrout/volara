@@ -11,8 +11,13 @@ from volara.dbs import SQLite
 
 def test_seeded_extract_frags_api_conformance():
     required = [
-        "task_name", "write_roi", "write_size", "context_size",
-        "drop_artifacts", "init", "process_block_func",
+        "task_name",
+        "write_roi",
+        "write_size",
+        "context_size",
+        "drop_artifacts",
+        "init",
+        "process_block_func",
     ]
     for attr in required:
         assert hasattr(SeededExtractFrags, attr), f"Missing {attr}"

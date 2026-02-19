@@ -6,7 +6,6 @@ import pytest
 from funlib.geometry import Coordinate, Roi
 from funlib.persistence.arrays import prepare_ds
 
-from volara.datasets import Affs, Labels, Raw
 from volara.dbs import SQLite
 from volara.logging import set_log_basedir
 from volara.tmp import seg_to_affgraph
