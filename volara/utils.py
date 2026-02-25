@@ -1,4 +1,4 @@
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from funlib.geometry import Coordinate, Roi
 from pydantic import (
@@ -6,6 +6,8 @@ from pydantic import (
     ConfigDict,
 )
 from pydantic_core import core_schema
+
+OpenMode = Literal["r", "r+", "a", "w", "w-"]
 
 
 class _CoordinatePydanticAnnotation:

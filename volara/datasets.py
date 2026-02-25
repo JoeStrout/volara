@@ -12,7 +12,7 @@ from funlib.geometry import Coordinate
 from funlib.persistence import Array, open_ds, prepare_ds
 from pydantic import Field
 
-from .utils import PydanticCoordinate, StrictBaseModel
+from .utils import OpenMode, PydanticCoordinate, StrictBaseModel
 
 logging.basicConfig(level=logging.INFO)
 
@@ -73,7 +73,7 @@ class Dataset(StrictBaseModel, ABC):
         if not isinstance(self.store, Path):
             if isinstance(self.store, str) and self.store.startswith("s3://"):
                 # drop an s3 zarr
-                import s3fs
+                import s3fs  # type: ignore[unresolved-import]
 
                 fs = s3fs.S3FileSystem()
                 try:
@@ -145,7 +145,7 @@ class Dataset(StrictBaseModel, ABC):
         """
         pass
 
-    def array(self, mode: str = "r") -> Array:
+    def array(self, mode: OpenMode = "r") -> Array:
         if not self.writable and mode != "r":
             raise ValueError(
                 f"Dataset {self.store} is not writable, cannot open in mode other than 'r'."
@@ -195,8 +195,9 @@ class Raw(Dataset):
     def bounds(self) -> list[tuple[float, float]] | None:
         if self.ome_norm is not None:
             array = open_ds(self.store, mode="r", **self.zarr_kwargs)
-            metadata_group = zarr.open(str(self.ome_norm))
-            channels_meta = metadata_group.attrs["omero"]["channels"]
+            metadata_group = zarr.open_group(str(self.ome_norm))
+            omero: dict = metadata_group.attrs["omero"]  # type: ignore[assignment]
+            channels_meta: list[dict] = omero["channels"]
             bounds = [
                 (channels_meta[c]["window"]["min"], channels_meta[c]["window"]["max"])
                 for c in range(array.data.shape[0])
@@ -319,7 +320,7 @@ class CloudVolumeWrapper(Dataset):
     agglomerate: bool = True
     data_name: str | None = None
 
-    def array(self, mode: str = "r") -> Array:
+    def array(self, mode: OpenMode = "r") -> Array:
         vol = CloudVolume(
             str(self.store),
             mip=self.mip,
