@@ -14,7 +14,7 @@ from volara.datasets import LSD, Affs, Labels, Raw
 def zarr_store(tmp_path):
     """Creates a temporary Zarr array for testing."""
     path = tmp_path / "test_data.zarr"
-    store = zarr.open(
+    store = zarr.open_array(
         str(path), mode="w", shape=(2, 10, 10), chunks=(1, 5, 5), dtype="float32"
     )
     store[:] = np.ones((2, 10, 10))  # Fill with 1s
@@ -27,7 +27,7 @@ def zarr_store(tmp_path):
 def second_zarr_store(tmp_path):
     """Creates a second temporary Zarr array for stacking tests."""
     path = tmp_path / "stack_data.zarr"
-    store = zarr.open(
+    store = zarr.open_array(
         str(path), mode="w", shape=(2, 10, 10), chunks=(1, 5, 5), dtype="float32"
     )
     store[:] = np.full((2, 10, 10), 2.0)  # Fill with 2s
@@ -168,7 +168,7 @@ def test_attrs_generation_raw(zarr_store):
     """Test that Raw generates correct attributes (bounds)."""
     # Create a dummy zarr for OME metadata
     ome_path = Path(zarr_store).parent / "ome.zarr"
-    ome = zarr.open(str(ome_path), mode="w")
+    ome = zarr.open_group(str(ome_path), mode="w")
     # Mock minimal OME structure
     ome.attrs["omero"] = {
         "channels": [
