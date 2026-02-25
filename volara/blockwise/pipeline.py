@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 import daisy
 import networkx as nx
+from daisy.cl_monitor import CLMonitor
 
 from .benchmark import BenchmarkLogger
 
@@ -126,7 +127,7 @@ class Pipeline:
                     daisy.run_blockwise(all_tasks)
                 else:
                     server = daisy.SerialServer()
-                    _cl_monitor = daisy.cl_monitor.CLMonitor(server)  # type: ignore[unresolved-attribute]
+                    _cl_monitor = CLMonitor(server)
                     server.run_blockwise(all_tasks)
 
         except Exception as e:
