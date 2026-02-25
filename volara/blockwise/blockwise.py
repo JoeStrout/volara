@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Iterator
 import daisy
 import numpy as np
 from daisy.block import BlockStatus
+from daisy.cl_monitor import CLMonitor
 from funlib.geometry import Coordinate, Roi
 from funlib.math import cantor_number
 from funlib.persistence import open_ds, prepare_ds
@@ -449,7 +450,7 @@ class BlockwiseTask(StrictBaseModel, ABC):
                     result = daisy.run_blockwise(tasks)  # noqa
                 else:
                     server = daisy.SerialServer()
-                    _cl_monitor = daisy.cl_monitor.CLMonitor(server)  # type: ignore[unresolved-attribute]
+                    _cl_monitor = CLMonitor(server)
                     result = server.run_blockwise(tasks)
 
         except Exception as e:
@@ -475,7 +476,7 @@ class BlockwiseTask(StrictBaseModel, ABC):
                 result = daisy.run_blockwise(tasks)  # noqa
             else:
                 server = daisy.SerialServer()
-                _cl_monitor = daisy.cl_monitor.CLMonitor(server)  # type: ignore[unresolved-attribute]
+                _cl_monitor = CLMonitor(server)
                 result = server.run_blockwise(tasks)
             return result
 
