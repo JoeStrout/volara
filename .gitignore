@@ -170,3 +170,4 @@ volara_benchmark_logs
 *.sqlite
 *.json
 *.npz
+CLAUDE.md
