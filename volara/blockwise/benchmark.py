@@ -242,13 +242,13 @@ class BenchmarkLogger:
 
             # Pivot to wide table: rows = task, columns = operation, values = duration_str
             time_df = (
-                time_df.pivot(values="time_profile", index="task", columns="operation")
+                time_df.pivot(on="operation", index="task", values="time_profile")
             ).select(["task"] + ops_order)
             mem_df = mem_df.pivot(
-                values="mem_profile", index="task", columns="operation"
+                on="operation", index="task", values="mem_profile"
             ).select(["task"] + ops_order)
             io_df = io_df.pivot(
-                values="io_profile", index="task", columns="operation"
+                on="operation", index="task", values="io_profile"
             ).select(["task"] + ops_order)
 
             time_df.write_csv(out_dir / "time.csv")
