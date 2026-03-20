@@ -131,33 +131,51 @@ def _is_list_like_field(field_info: FieldInfo) -> bool:
 
 def _annotation_is_list(ann) -> bool:
     """Check if annotation is a list type."""
+    import types
+    from typing import Annotated, Union
+
     origin = get_origin(ann)
     if origin is list or ann is list:
         return True
-    # Check Annotated types
-    if origin is not None:
-        args = get_args(ann)
-        for arg in args:
+    # Only recurse into Union and Annotated types, not into dict/tuple/etc.
+    if origin is Union or isinstance(ann, types.UnionType):
+        for arg in get_args(ann):
             if _annotation_is_list(arg):
                 return True
-    # Check if it's an Annotated type
-    try:
-        from typing import Annotated
-
-        if get_origin(ann) is Annotated:
-            return _annotation_is_list(get_args(ann)[0])
-    except ImportError:
-        pass
+    if origin is Annotated:
+        return _annotation_is_list(get_args(ann)[0])
     return False
 
 
 def _is_coordinate_field(field_info: FieldInfo) -> bool:
-    """Check if a field expects a PydanticCoordinate (list of ints)."""
+    """Check if a field expects a PydanticCoordinate (list of ints).
+
+    Only matches when the top-level type (or Optional[top-level]) is a
+    Coordinate, not when Coordinate appears nested inside dict/list.
+    """
+    import types
+    from typing import Annotated, Union
+
     ann = field_info.annotation
     if ann is None:
         return False
-    ann_str = str(ann)
-    return "Coordinate" in ann_str or "PydanticCoordinate" in ann_str
+
+    def _is_coordinate_annotation(a) -> bool:
+        origin = get_origin(a)
+        # Unwrap Annotated
+        if origin is Annotated:
+            return _is_coordinate_annotation(get_args(a)[0])
+        # Unwrap Optional / Union
+        if origin is Union or isinstance(a, types.UnionType):
+            return any(
+                _is_coordinate_annotation(arg)
+                for arg in get_args(a)
+                if arg is not type(None)
+            )
+        a_str = str(a)
+        return "Coordinate" in a_str and "dict" not in a_str and "list" not in a_str
+
+    return _is_coordinate_annotation(ann)
 
 
 def _looks_like_flag(token: str) -> bool:

@@ -175,6 +175,12 @@ class SQLite(DB):
     def open(self, mode="r") -> SQLiteGraphDataBase:
         node_attrs, edge_attrs = self.graph_attrs
 
+        # When edge_attrs weren't explicitly provided and the DB already
+        # exists, pass None so funlib reads attrs from stored metadata
+        # rather than asserting a match against defaults.
+        if self.edge_attrs is None and self.path.exists():
+            edge_attrs = None
+
         if not self.path.parent.exists():
             self.path.parent.mkdir(parents=True)
 

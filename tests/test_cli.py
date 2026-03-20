@@ -145,6 +145,16 @@ class TestParseCliArgs:
         assert result == {"num_workers": 4}
         assert isinstance(result["num_workers"], int)
 
+    def test_dict_field_not_wrapped_in_list(self):
+        """Dict fields like scores should not be treated as list-like."""
+        from volara.blockwise import AffAgglom
+
+        result = parse_cli_args(
+            ["--scores", '{"zyx_aff":[[1,0,0],[0,1,0],[0,0,1]]}'],
+            task_class=AffAgglom,
+        )
+        assert result == {"scores": {"zyx_aff": [[1, 0, 0], [0, 1, 0], [0, 0, 1]]}}
+
 
 class TestResolveShorthands:
     def test_shorthand_labels(self):
@@ -250,7 +260,7 @@ class TestRunCommand:
         assert result.exit_code == 0
         assert "TASK_NAME" in result.output
         assert "--config" in result.output
-        assert "Available tasks:" in result.output
+        assert "Available Tasks:" in result.output
         assert "extract-frags" in result.output
         assert "aff-agglom" in result.output
 
